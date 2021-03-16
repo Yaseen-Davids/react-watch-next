@@ -1,27 +1,27 @@
 import React from "react";
 
+import { format } from "date-fns";
 import styled from "styled-components";
 
 import { NextEpisodeType } from "../../lib/series";
-import { format } from "date-fns";
 
 type NextEpisodeProps = {
   item: NextEpisodeType;
-}
+};
 
 const NextEpisode: React.FC<NextEpisodeProps> = ({ item }) => {
   if (!item) {
     return (
-      <Container>
+      <NoInfoWrapper>
         <h3>Next Episode</h3>
         <p>Sorry, no info about the next episode is available yet.</p>
-      </Container>
-    )
+      </NoInfoWrapper>
+    );
   }
 
   return (
     <Container>
-      <h3>Previous Episode</h3>
+      <h3>Next Episode</h3>
       <Box>
         <BoxCol>Name:</BoxCol>
         <p>{item?.name}</p>
@@ -40,20 +40,36 @@ const NextEpisode: React.FC<NextEpisodeProps> = ({ item }) => {
       </Box>
       <Box>
         <BoxCol>Summary:</BoxCol>
-        <p dangerouslySetInnerHTML={{ __html: item ? item.summary : "" }} />
+        <BoxColSummary
+          dangerouslySetInnerHTML={{ __html: item ? item.summary : "" }}
+        />
       </Box>
     </Container>
-  )
-}
+  );
+};
 
 export default NextEpisode;
 
 const Container = styled.div`
   width: 100%;
   h3 {
-    border-bottom: 1px solid rgb(212, 212, 212);
+    border-bottom: 1px solid #46b5d1;
     padding: 10px;
     width: 40%;
+  }
+`;
+
+const NoInfoWrapper = styled.div`
+  width: 100%;
+  h3 {
+    border-bottom: 1px solid #46b5d1;
+    padding: 10px;
+    width: 40%;
+  }
+  p {
+    color: rgb(212, 212, 212);
+    font-size: 15px;
+    line-height: 25px;
   }
 `;
 
@@ -66,4 +82,10 @@ const Box = styled.div`
 const BoxCol = styled.p`
   text-align: right;
   color: rgb(212, 212, 212);
+`;
+
+const BoxColSummary = styled.p`
+  color: rgb(212, 212, 212);
+  font-size: 15px;
+  line-height: 25px;
 `;

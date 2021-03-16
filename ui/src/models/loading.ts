@@ -1,10 +1,10 @@
-export type Loading = {
+export type LoadingType = {
   loading: boolean;
   loaded: boolean;
-  error?: Error | undefined;
+  error?: Error | null;
 };
 
-export const defaultLoading = {
+export const defaultLoading: LoadingType = {
   loading: false,
   loaded: false,
   error: undefined,

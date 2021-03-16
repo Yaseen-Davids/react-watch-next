@@ -1,12 +1,11 @@
 import React, { useEffect, useContext } from "react";
 
-import { useHistory, } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { LoginContext } from "../../contexts/LoginContext";
 import { whoami } from "../../lib/user";
 
 export const checkLogin = async (setLoggedIn: any, history: any) => {
-
   try {
     const resp = await whoami();
     if (resp.status >= 400) {
@@ -19,15 +18,15 @@ export const checkLogin = async (setLoggedIn: any, history: any) => {
       setLoggedIn(false);
     }
   }
-}
+};
 
-export const LoginGuard: React.FunctionComponent<any> = ({ }) => {
+export const LoginGuard: React.FunctionComponent<any> = ({}) => {
   const history = useHistory();
 
   const { setLoggedIn } = useContext(LoginContext);
 
   useEffect(() => {
-    checkLogin(setLoggedIn, history)
+    checkLogin(setLoggedIn, history);
   }, [history.location.pathname]);
 
   return null;

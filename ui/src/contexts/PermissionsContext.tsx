@@ -17,14 +17,19 @@ export const PermissionsProvider: React.FC = ({ children }) => {
   const canCreateMediaLink = useMemo(() => {
     const isLoaded = userLoading.loaded;
     const isUser = user.id;
-    return loggedIn && isLoaded && isUser;
+    return loggedIn && isLoaded && Boolean(isUser);
   }, [userLoading, loggedIn, user]);
 
-  const value = useMemo(() => ({
-    canCreateMediaLink,
-  }), [userLoading, loggedIn, user]);
+  const value = useMemo(
+    () => ({
+      canCreateMediaLink,
+    }),
+    [userLoading, loggedIn, user]
+  );
 
   return (
-    <PermissionsContext.Provider value={value}>{children}</PermissionsContext.Provider>
-  )
-}
+    <PermissionsContext.Provider value={value}>
+      {children}
+    </PermissionsContext.Provider>
+  );
+};

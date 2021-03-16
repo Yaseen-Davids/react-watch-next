@@ -1,34 +1,39 @@
 import React, { createContext, useMemo, useState } from "react";
 import { defaultLoading } from "../models/loading";
-import { Loading } from "../models/base";
 import { whoami } from "../lib/user";
 
 const defaultUser = {
   id: 0,
   email: "",
-  username: ""
+  username: "",
 };
 
 type User = {
   id: number;
   email: string;
   username: string;
-}
+};
+
+export type LoadingType = {
+  loading: boolean;
+  loaded: boolean;
+  error?: Error | null;
+};
 
 export type UserContextState = {
-  loading: Loading;
+  loading: LoadingType;
   hydrateUser(): void;
   user: User;
 };
 
 export const UserContext = createContext<UserContextState>({
   loading: defaultLoading,
-  hydrateUser: () => { },
-  user: defaultUser
+  hydrateUser: () => {},
+  user: defaultUser,
 });
 
 export const UserProvider: React.FC = ({ children }) => {
-  const [loading, setLoading] = useState<Loading>(defaultLoading);
+  const [loading, setLoading] = useState<LoadingType>(defaultLoading);
   const [user, setUser] = useState<User>(defaultUser);
 
   const hydrateUser = async () => {
@@ -52,18 +57,16 @@ export const UserProvider: React.FC = ({ children }) => {
         error: error,
       });
     }
-  }
+  };
 
-  const value = useMemo(() => ({
-    loading,
-    hydrateUser,
-    user
-  }), [
-    loading, ,
-    user
-  ]);
+  const value = useMemo(
+    () => ({
+      loading,
+      hydrateUser,
+      user,
+    }),
+    [loading, user]
+  );
 
-  return (
-    <UserContext.Provider value={value}>{children}</UserContext.Provider>
-  )
-}
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+};

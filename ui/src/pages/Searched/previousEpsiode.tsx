@@ -1,15 +1,24 @@
 import React from "react";
 
+import { format } from "date-fns";
 import styled from "styled-components";
 
 import { PreviousEpisodeType } from "../../lib/series";
-import { format } from "date-fns";
 
 type PreviousEpisodeProps = {
   item: PreviousEpisodeType;
-}
+};
 
 const PreviousEpisode: React.FC<PreviousEpisodeProps> = ({ item }) => {
+  if (!item) {
+    return (
+      <NoInfoWrapper>
+        <h3>Previous Episode</h3>
+        <p>Sorry, no info about the previous episode is available yet.</p>
+      </NoInfoWrapper>
+    );
+  }
+
   return (
     <Container>
       <h3>Previous Episode</h3>
@@ -31,20 +40,36 @@ const PreviousEpisode: React.FC<PreviousEpisodeProps> = ({ item }) => {
       </Box>
       <Box>
         <BoxCol>Summary:</BoxCol>
-        <p dangerouslySetInnerHTML={{ __html: item ? item.summary : "" }} />
+        <BoxColSummary
+          dangerouslySetInnerHTML={{ __html: item ? item.summary : "" }}
+        />
       </Box>
     </Container>
-  )
-}
+  );
+};
 
 export default PreviousEpisode;
 
 const Container = styled.div`
   width: 100%;
   h3 {
-    border-bottom: 1px solid rgb(212, 212, 212);
+    border-bottom: 1px solid #46b5d1;
     padding: 10px;
     width: 40%;
+  }
+`;
+
+const NoInfoWrapper = styled.div`
+  width: 100%;
+  h3 {
+    border-bottom: 1px solid #46b5d1;
+    padding: 10px;
+    width: 40%;
+  }
+  p {
+    color: rgb(212, 212, 212);
+    font-size: 15px;
+    line-height: 25px;
   }
 `;
 
@@ -57,4 +82,10 @@ const Box = styled.div`
 const BoxCol = styled.p`
   text-align: right;
   color: rgb(212, 212, 212);
+`;
+
+const BoxColSummary = styled.p`
+  color: rgb(212, 212, 212);
+  font-size: 15px;
+  line-height: 25px;
 `;

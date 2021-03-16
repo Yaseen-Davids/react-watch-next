@@ -17,8 +17,6 @@ export type Series = {
 
 export type PreviousEpisodeType = {
   airdate: string;
-  medium_image: string;
-  original_image: string;
   name: string;
   episode: number;
   runtime: number;
@@ -28,8 +26,6 @@ export type PreviousEpisodeType = {
 
 export type NextEpisodeType = {
   airdate: string;
-  medium_image: string;
-  original_image: string;
   name: string;
   episode: number;
   runtime: number;
