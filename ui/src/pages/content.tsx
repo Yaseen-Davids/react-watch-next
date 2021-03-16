@@ -24,8 +24,11 @@ const Container = styled.div`
   height: 100%;
   display: grid;
   grid-template-areas: ". content .";
-  grid-template-columns: 350px 1fr 350px;
+  grid-template-columns: 150px 1fr 150px;
   grid-template-rows: 1fr;
+  @media (min-width: 1920px) {
+    grid-template-columns: 350px 1fr 350px;
+  }
 `;
 
 const Content = styled.div`
