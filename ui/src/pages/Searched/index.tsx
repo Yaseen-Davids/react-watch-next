@@ -6,20 +6,46 @@ import axios from "axios";
 import { Button, Icon } from "semantic-ui-react";
 
 import { NextEpisodeType, PreviousEpisodeType, Series } from "../../lib/series";
-import PreviousEpisode from "./previousEpsiode";
-import NextEpisode from "./nextEpisode";
+import { AdditionalInfo } from "./AdditionalInfo";
+import { EpisodesList } from "./EpisodeList";
 
 type SearchedProps = {};
 
 const Searched: React.FC<SearchedProps> = () => {
   const match = useParams<{ searchId: string }>();
 
-  const [item, setItem] = useState<Series>();
+  const [item, setItem] = useState<Series>({
+    id: 0,
+    genres: [],
+    language: "English",
+    medium_image: "",
+    original_image: "",
+    name: "",
+    premiered: "",
+    previous_episode: {
+      airdate: "",
+      name: "",
+      episode: 0,
+      runtime: 0,
+      season: 0,
+      summary: "",
+    },
+    next_episode: {
+      airdate: "",
+      name: "",
+      episode: 0,
+      runtime: 0,
+      season: 0,
+      summary: "",
+    },
+    rating: 0,
+    runtime: 0,
+    status: "",
+    summary: "",
+    updated: 0,
+  });
   const [loading, setLoading] = useState<boolean>(false);
   const [seasons, setSeasons] = useState<any[]>([]);
-
-  const [nextEpisode, setNextEpisode] = useState<NextEpisodeType>();
-  const [previousEpisode, setPreviousEpisode] = useState<PreviousEpisodeType>();
 
   const loadData = async () => {
     try {
@@ -34,35 +60,6 @@ const Searched: React.FC<SearchedProps> = () => {
       setSeasons(seasons.data);
 
       const data = result.data;
-
-      if (data._links.previousepisode) {
-        const { data: previousEpisodeResult } = await axios.get(
-          data._links.previousepisode.href
-        );
-
-        setPreviousEpisode({
-          airdate: previousEpisodeResult.airdate,
-          episode: previousEpisodeResult.number,
-          name: previousEpisodeResult.name,
-          runtime: previousEpisodeResult.runtime,
-          season: previousEpisodeResult.season,
-          summary: previousEpisodeResult.summary,
-        });
-      }
-      if (data._links.nextepisode) {
-        const { data: nextEpisodeResult } = await axios.get(
-          data._links.nextepisode.href
-        );
-
-        setNextEpisode({
-          airdate: nextEpisodeResult.airdate,
-          episode: nextEpisodeResult.number,
-          name: nextEpisodeResult.name,
-          runtime: nextEpisodeResult.runtime,
-          season: nextEpisodeResult.season,
-          summary: nextEpisodeResult.summary,
-        });
-      }
 
       setItem({
         id: data.id,
@@ -94,32 +91,17 @@ const Searched: React.FC<SearchedProps> = () => {
   useEffect(() => {
     const searchId = match.searchId;
 
-    setPreviousEpisode(undefined);
-    setNextEpisode(undefined);
-
     if (searchId.length > 0) {
       loadData();
     }
   }, [match.searchId]);
-
-  const getGenresString = (genres: string[] = []) => {
-    let str = "";
-    genres.forEach((genre: string, index: number) => {
-      if (index == 0) {
-        str = `${genre}`;
-      } else {
-        str = `${str}, ${genre}`;
-      }
-    });
-    return str;
-  };
 
   return (
     <Container>
       <Wrapper>
         <HeaderContent>
           <HeaderContentImage>
-            <img src={item?.medium_image} />
+            <img src={item.medium_image} />
             <Button
               fluid
               size="tiny"
@@ -131,46 +113,32 @@ const Searched: React.FC<SearchedProps> = () => {
           </HeaderContentImage>
           <HeaderContentSummary>
             <HeaderName>
-              <h2>{item?.name}</h2>
+              <h2>{item.name}</h2>
             </HeaderName>
             <HeaderInfoContainer>
               <HeaderInfoIcon>
                 <Icon
-                  style={{ marginTop: "10px" }}
+                  style={{ marginTop: "8px" }}
                   name="circle thin"
                   color={
-                    item?.status.toLocaleLowerCase() === "ended"
+                    item.status.toLocaleLowerCase() === "ended"
                       ? "grey"
                       : "green"
                   }
                   size="tiny"
                 />
-                <p>{item?.status}</p>
+                <p>{item.status}</p>
               </HeaderInfoIcon>
               <p>|</p>
               <p>
                 {seasons.length} {seasons.length === 1 ? "Season" : "Seasons"}
               </p>
-              <p>|</p>
-              <p>{getGenresString(item?.genres)}</p>
-              <p>|</p>
-              <HeaderInfoIcon>
-                <Icon
-                  style={{ marginTop: "6px", marginRight: "5px" }}
-                  name="star"
-                  color={"yellow"}
-                  size="small"
-                />
-                <p>{item?.rating} / 10</p>
-              </HeaderInfoIcon>
             </HeaderInfoContainer>
             <p dangerouslySetInnerHTML={{ __html: item ? item.summary : "" }} />
+            <AdditionalInfo item={item} />
           </HeaderContentSummary>
         </HeaderContent>
-        <RelatedContent>
-          <PreviousEpisode item={previousEpisode as any} />
-          <NextEpisode item={nextEpisode as any} />
-        </RelatedContent>
+        <EpisodesList seasons={seasons} />
       </Wrapper>
     </Container>
   );
@@ -208,7 +176,12 @@ const HeaderContentImage = styled.div`
   text-align: center;
 `;
 
-const HeaderName = styled.div``;
+const HeaderName = styled.div`
+  h2 {
+    font-size: 2em;
+    font-weight: lighter;
+  }
+`;
 
 const HeaderInfoContainer = styled.div`
   display: flex;
@@ -227,18 +200,11 @@ const HeaderInfoIcon = styled.div`
 
 const HeaderContentSummary = styled.div`
   display: grid;
-  grid-template-rows: min-content min-content 1fr;
+  grid-template-rows: min-content min-content min-content;
   grid-gap: 10px;
   p {
     font-size: 16px;
     line-height: 25px;
     color: rgb(212, 212, 212);
   }
-`;
-
-const RelatedContent = styled.div`
-  display: flex;
-  grid-template-columns: 1fr 1fr;
-  width: 100%;
-  grid-gap: 30px;
 `;

@@ -11,8 +11,8 @@ export type Series = {
   original_image: string;
   summary: string;
   updated: number;
-  next_episode: string;
-  previous_episode: string;
+  next_episode: NextEpisodeType;
+  previous_episode: PreviousEpisodeType;
 };
 
 export type PreviousEpisodeType = {

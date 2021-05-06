@@ -99,7 +99,6 @@ const Search = styled.div`
   display: grid;
   grid-template-columns: 1fr 50px;
   grid-gap: 10px;
-  /* border: 1px solid grey; */
 `;
 
 const LoadingSpinner = styled(Loader)`
@@ -109,11 +108,13 @@ const LoadingSpinner = styled(Loader)`
 `;
 
 const SearchInput = styled(Input)`
-  &&&&& input {
-    width: 100%;
-    /* width: 400px; */
-    background: #333;
-    color: #fff;
+  &&&&& {
+    width: 400px;
+    input {
+      /* width: 100%; */
+      background: #333;
+      color: #fff;
+    }
   }
 `;
 
